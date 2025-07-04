@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C.A.S.T - Student Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .feature-card:hover .feature-icon {
+      transform: scale(1.1);
+      transition: transform 0.3s ease;
+    }
+    .sidebar-item:hover {
+      background-color: rgba(255,255,255,0.1);
+      transition: background-color 0.2s ease;
+    }
+    .dashboard-section {
+      animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Chatbot animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .robot-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    .robot-blink {
+      animation: blink 2s linear infinite;
+    }
+    .robot-pulse {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.3s ease;
+    }
+    .fade-enter-from,
+    .fade-leave-to {
+      opacity: 0;
+    }
+    .slide-enter-active,
+    .slide-leave-active {
+      transition: all 0.3s ease;
+    }
+    .slide-enter-from,
+    .slide-leave-to {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div id="app">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Enhanced Sidebar with all buttons prioritized -->
+      <aside class="w-64 bg-blue-900 text-white shadow-lg flex flex-col">
+        <div class="p-6 border-b border-blue-800">
+          <h1 class="text-2xl font-bold">C.A.S.T</h1>
+          <p class="text-blue-200 text-sm">Student Portal</p>
+        </div>
+        
+        <nav class="p-4 flex-1 overflow-y-auto">
+          <!-- Assignment Priority Section (Top) -->
+          <div class="mb-6">
+            <h3 class="text-xs uppercase tracking-wider text-blue-400 mb-3">📝 Assignments</h3>
+            <ul class="space-y-1">
+              <li>
+                <a @click="showFeature('AssignmentHub')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'AssignmentHub' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-tasks mr-3"></i>
+                  <span>Assignment Hub</span>
+                </a>
+              </li>
+              <li>
+                <a @click="showFeature('SubmitAssignment')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'SubmitAssignment' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-file-upload mr-3"></i>
+                  <span>Submit Assignment</span>
+                </a>
+              </li>
+              <li>
+                <a @click="showFeature('Deadlines')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'Deadlines' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-calendar-day mr-3"></i>
+                  <span>Upcoming Deadlines</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Core Academic Tools -->
+          <div class="mb-6">
+            <h3 class="text-xs uppercase tracking-wider text-blue-400 mb-3">📚 Academic Tools</h3>
+            <ul class="space-y-1">
+              <li>
+                <a @click="showFeature('CourseMaterials')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'CourseMaterials' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-book-open mr-3"></i>
+                  <span>Course Materials</span>
+                </a>
+              </li>
+              <li>
+                <a @click="showFeature('Grades')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'Grades' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-chart-line mr-3"></i>
+                  <span>Grades</span>
+                </a>
+              </li>
+              <li>
+                <a @click="showFeature('Schedule')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'Schedule' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-calendar-check mr-3"></i>
+                  <span>View Schedule</span>
+                </a>
+              </li>
+              <li>
+                <a @click="showFeature('PerformanceAnalytics')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'PerformanceAnalytics' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-chart-pie mr-3"></i>
+                  <span>Performance Analytics</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Learning Tools -->
+          <div class="mb-6">
+            <h3 class="text-xs uppercase tracking-wider text-blue-400 mb-3">🧠 Learning Tools</h3>
+            <ul class="space-y-1">
+              <li>
+                <a @click="showFeature('AIWritingAssistant')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'AIWritingAssistant' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-robot mr-3"></i>
+                  <span>AI Writing Assistant</span>
+                </a>
+              </li>
+              <li>
+                <a @click="showFeature('StudyPlanner')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'StudyPlanner' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-calendar-alt mr-3"></i>
+                  <span>Study Planner</span>
+                </a>
+              </li>
+              <li>
+                <a @click="showFeature('Flashcards')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'Flashcards' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-layer-group mr-3"></i>
+                  <span>Flashcards</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Collaboration -->
+          <div class="mb-6">
+            <h3 class="text-xs uppercase tracking-wider text-blue-400 mb-3">👥 Collaboration</h3>
+            <ul class="space-y-1">
+              <li>
+                <a @click="showFeature('StudyGroups')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'StudyGroups' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-users mr-3"></i>
+                  <span>Study Groups</span>
+                </a>
+              </li>
+              <li>
+                <a @click="showFeature('ProjectWorkspace')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'ProjectWorkspace' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-project-diagram mr-3"></i>
+                  <span>Project Workspace</span>
+                </a>
+              </li>
+              <li>
+                <a @click="showFeature('Discussions')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'Discussions' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-comments mr-3"></i>
+                  <span>Class Discussions</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Support -->
+          <div class="mb-6">
+            <h3 class="text-xs uppercase tracking-wider text-blue-400 mb-3">🛠️ Support</h3>
+            <ul class="space-y-1">
+              <li>
+                <a @click="toggleChatbot" class="flex items-center p-3 rounded-lg cursor-pointer hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item">
+                  <i class="fas fa-robot mr-3"></i>
+                  <span>John - AI Assistant</span>
+                </a>
+              </li>
+              <li>
+                <a @click="showFeature('HelpDesk')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'HelpDesk' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-question-circle mr-3"></i>
+                  <span>Help Desk</span>
+                </a>
+              </li>
+              <li>
+                <a @click="showFeature('Library')" class="flex items-center p-3 rounded-lg cursor-pointer" :class="currentView === 'Library' ? 'bg-blue-800 text-white' : 'hover:bg-blue-800 text-blue-100 hover:text-white sidebar-item'">
+                  <i class="fas fa-book-reader mr-3"></i>
+                  <span>Library Resources</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        
+        <div class="p-4 border-t border-blue-800">
+          <div class="flex items-center">
+            <img src="https://via.placeholder.com/40" alt="User" class="h-8 w-8 rounded-full">
+            <div class="ml-3">
+              <p class="text-sm font-medium">Dalitso Zulu</p>
+              <p class="text-xs text-blue-300">Computer Science</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Top Header -->
+        <header class="bg-white shadow-sm">
+          <div class="flex items-center justify-between p-4">
+            <div>
+              <h2 class="text-xl font-semibold text-gray-800">{{ currentViewTitle }}</h2>
+              <p class="text-sm text-gray-500">{{ currentViewDescription }}</p>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+              <div class="relative">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64">
+              </div>
+              
+              <div class="flex items-center space-x-4">
+                <div class="relative">
+                  <i class="fas fa-bell text-gray-600 hover:text-blue-600 cursor-pointer text-xl"></i>
+                  <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                </div>
+                
+                <div class="relative group">
+                  <img src="https://via.placeholder.com/40" alt="User" class="h-8 w-8 rounded-full cursor-pointer">
+                  <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log out</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <transition name="fade" mode="out-in">
+            <component :is="currentView" @back-to-dashboard="showDashboard"></component>
+          </transition>
+        </main>
+      </div>
+    </div>
+
+    <!-- Chatbot Implementation -->
+    <transition name="fade">
+      <div v-if="showChatbot" class="fixed bottom-4 right-4 w-80 bg-white shadow-xl rounded-t-lg" style="max-height: 70vh; z-index: 1000;">
+        <div class="bg-secondary text-white p-4 rounded-t-lg flex justify-between items-center">
+          <h3 class="font-bold flex items-center">
+            <div class="relative mr-2">
+              <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center robot-float">
+                <div class="w-6 h-6 bg-danger rounded-full flex items-center justify-center robot-pulse">
+                  <div class="w-2 h-2 bg-white rounded-full robot-blink"></div>
+                </div>
+              </div>
+              <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-danger rounded-full"></div>
+            </div>
+            John - Admin Assistant
+          </h3>
+          <button @click="toggleChatbot" class="text-white hover:text-gray-200">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="p-4 h-96 overflow-y-auto text-sm bg-gray-50 flex flex-col space-y-3">
+          <div class="flex justify-start">
+            <div class="bg-white p-3 rounded-lg shadow-sm max-w-xs md:max-w-md border border-gray-200">
+              <p>Hello! I'm John, your virtual admin assistant. 🤖</p>
+              <p class="text-xs text-gray-500 mt-1">Try asking about deadlines, registration, or campus services.</p>
+            </div>
+          </div>
+          <div v-for="(message, index) in chatMessages" :key="index" 
+               :class="{'flex justify-end': message.sender === 'user', 'flex justify-start': message.sender === 'bot'}">
+            <div :class="{
+              'bg-primary text-white p-3 rounded-lg shadow-sm max-w-xs md:max-w-md': message.sender === 'user',
+              'bg-white p-3 rounded-lg shadow-sm max-w-xs md:max-w-md border border-gray-200': message.sender === 'bot'
+            }">
+              <p v-html="message.text"></p>
+              <p v-if="message.sender === 'bot' && index === chatMessages.length - 1" class="text-xs text-gray-500 mt-2">
+                Is there anything else I can help with?
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="p-3 border-t bg-white">
+          <div class="flex">
+            <input type="text" v-model="userMessage" @keyup.enter="sendMessage" placeholder="Type your question..." 
+                   class="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-1 focus:ring-primary text-sm">
+            <button @click="sendMessage" class="bg-primary text-white py-2 px-4 rounded-r-lg text-sm hover:bg-blue-700 transition">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <div class="mt-2 flex flex-wrap gap-1">
+            <button v-for="(question, index) in quickQuestions" :key="index" 
+                    @click="selectQuickQuestion(question)"
+                    class="bg-gray-100 hover:bg-gray-200 text-xs py-1 px-2 rounded">
+              {{ question }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <button v-if="!showChatbot" @click="toggleChatbot" 
+            class="fixed bottom-6 right-6 bg-secondary text-white p-4 rounded-full shadow-lg hover:bg-blue-800 transition transform hover:scale-105"
+            style="z-index: 999;">
+      <div class="relative">
+        <i class="fas fa-comment-dots text-xl"></i>
+        <div class="absolute -top-1 -right-1 w-3 h-3 bg-danger rounded-full animate-pulse"></div>
+      </div>
+    </button>
+  </div>
+
+  <script>
+    const { createApp, ref, computed } = Vue;
+    
+    // Feature Components
+    const DashboardView = {
+      template: `
+        <div class="dashboard-section">
+          <!-- Welcome Banner -->
+          <div class="mb-8">
+            <div class="flex flex-col md:flex-row items-center md:items-start">
+              <img src="https://via.placeholder.com/96" alt="Student" class="h-24 w-24 rounded-full mr-6 mb-4 md:mb-0">
+              <div class="flex-1">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Welcome, Dalitso Zulu</h2>
+                    <p class="text-gray-600">Computer Science | Year 4</p>
+                  </div>
+                  <div class="bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    GPA: 3.8
+                  </div>
+                </div>
+                <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div class="bg-blue-50 p-3 rounded-lg">
+                    <p class="text-xs text-gray-500">Current Courses</p>
+                    <p class="font-bold">5</p>
+                  </div>
+                  <div class="bg-green-50 p-3 rounded-lg">
+                    <p class="text-xs text-gray-500">Assignments Due</p>
+                    <p class="font-bold">3</p>
+                  </div>
+                  <div class="bg-amber-50 p-3 rounded-lg">
+                    <p class="text-xs text-gray-500">Upcoming Exams</p>
+                    <p class="font-bold">2</p>
+                  </div>
+                  <div class="bg-purple-50 p-3 rounded-lg">
+                    <p class="text-xs text-gray-500">Active Projects</p>
+                    <p class="font-bold">1</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500 hover:shadow-lg transition">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-gray-500 text-sm">Active Courses</p>
+                  <h4 class="text-2xl font-bold">5</h4>
+                </div>
+                <i class="fas fa-book text-blue-500 text-2xl feature-icon"></i>
+              </div>
+              <div class="mt-4">
+                <div class="flex justify-between text-sm">
+                  <span>Current GPA</span>
+                  <span class="font-medium">3.8</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                  <div class="bg-blue-500 h-2 rounded-full" style="width: 95%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500 hover:shadow-lg transition">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-gray-500 text-sm">Pending Assignments</p>
+                  <h4 class="text-2xl font-bold">3</h4>
+                </div>
+                <i class="fas fa-tasks text-purple-500 text-2xl feature-icon"></i>
+              </div>
+              <div class="mt-4">
+                <div class="flex justify-between text-sm">
+                  <span>Next Deadline</span>
+                  <span class="font-medium">Tomorrow</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                  <div class="bg-yellow-500 h-2 rounded-full" style="width: 75%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500 hover:shadow-lg transition">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-gray-500 text-sm">Study Groups</p>
+                  <h4 class="text-2xl font-bold">2</h4>
+                </div>
+                <i class="fas fa-users text-green-500 text-2xl feature-icon"></i>
+              </div>
+              <div class="mt-4">
+                <div class="flex justify-between text-sm">
+                  <span>Active Members</span>
+                  <span class="font-medium">8</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                  <div class="bg-green-500 h-2 rounded-full" style="width: 80%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="mb-8">
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+              <div class="p-5 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Recent Activity</h3>
+              </div>
+              <div class="divide-y divide-gray-200">
+                <div class="p-4 hover:bg-gray-50 transition">
+                  <div class="flex items-center">
+                    <div class="bg-green-100 p-2 rounded-full mr-4">
+                      <i class="fas fa-check-circle text-green-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-sm font-medium">Submitted CS201 Assignment</p>
+                      <p class="text-xs text-gray-500">Today at 10:45 AM - Data Structures Project</p>
+                    </div>
+                    <button class="text-blue-600 text-sm font-medium hover:text-blue-800">View</button>
+                  </div>
+                </div>
+                <div class="p-4 hover:bg-gray-50 transition">
+                  <div class="flex items-center">
+                    <div class="bg-blue-100 p-2 rounded-full mr-4">
+                      <i class="fas fa-comment-alt text-blue-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-sm font-medium">New Feedback Received</p>
+                      <p class="text-xs text-gray-500">Yesterday at 3:30 PM - Algorithms Quiz #2 (92%)</p>
+                    </div>
+                    <button class="text-blue-600 text-sm font-medium hover:text-blue-800">Review</button>
+                  </div>
+                </div>
+                <div class="p-4 hover:bg-gray-50 transition">
+                  <div class="flex items-center">
+                    <div class="bg-purple-100 p-2 rounded-full mr-4">
+                      <i class="fas fa-user-friends text-purple-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-sm font-medium">Study Group Created</p>
+                      <p class="text-xs text-gray-500">2 days ago - Database Systems (4 members)</p>
+                    </div>
+                    <button class="text-blue-600 text-sm font-medium hover:text-blue-800">View</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming Deadlines -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+              <i class="fas fa-calendar-day text-danger mr-2"></i> Upcoming Deadlines
+            </h3>
+            <div class="space-y-4">
+              <div class="flex items-start border-l-4 border-danger pl-3 py-1">
+                <div class="mr-3 flex-shrink-0">
+                  <div class="bg-danger/10 text-danger p-2 rounded-lg">
+                    <i class="fas fa-file-alt"></i>
+                  </div>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-800">Software Engineering</p>
+                  <p class="text-sm text-gray-600">Project Phase 1 Submission</p>
+                  <p class="text-xs text-danger font-semibold mt-1">Due: Tomorrow, 11:59 PM</p>
+                </div>
+              </div>
+              <div class="flex items-start border-l-4 border-accent pl-3 py-1">
+                <div class="mr-3 flex-shrink-0">
+                  <div class="bg-accent/10 text-accent p-2 rounded-lg">
+                    <i class="fas fa-laptop-code"></i>
+                  </div>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-800">Web Development</p>
+                  <p class="text-sm text-gray-600">Assignment 3: React Components</p>
+                  <p class="text-xs text-accent font-semibold mt-1">Due: Friday, 5:00 PM</p>
+                </div>
+              </div>
+              <div class="flex items-start border-l-4 border-primary pl-3 py-1">
+                <div class="mr-3 flex-shrink-0">
+                  <div class="bg-primary/10 text-primary p-2 rounded-lg">
+                    <i class="fas fa-book"></i>
+                  </div>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-800">Theory of Computation</p>
+                  <p class="text-sm text-gray-600">Chapter 4 Exercises</p>
+                  <p class="text-xs text-primary font-semibold mt-1">Due: Next Monday</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+    };
+    
+    // All other components (AIWritingAssistant, StudyPlanner, etc.) would be defined here
+    // with similar template structures as shown in the previous example
+    
+    // Main Vue App
+    createApp({
+      setup() {
+        const currentView = ref('DashboardView');
+        const showChatbot = ref(false);
+        const userMessage = ref('');
+        const chatMessages = ref([
+          { sender: 'bot', text: "Hello! I'm John, your virtual assistant. How can I help you today?" }
+        ]);
+        
+        const quickQuestions = ref([
+          "When is my next assignment due?",
+          "How do I submit coursework?",
+          "Where are my course materials?",
+          "How do I contact my professor?"
+        ]);
+        
+        const views = {
+          DashboardView: {
+            title: "Dashboard",
+            description: "Your personalized academic overview"
+          },
+          AssignmentHub: {
+            title: "Assignment Hub",
+            description: "Manage and track your coursework"
+          },
+          SubmitAssignment: {
+            title: "Submit Assignment",
+            description: "Upload your coursework submissions"
+          },
+          Deadlines: {
+            title: "Upcoming Deadlines",
+            description: "View all approaching due dates"
+          },
+          CourseMaterials: {
+            title: "Course Materials",
+            description: "Access all your learning resources"
+          },
+          Grades: {
+            title: "Grades",
+            description: "View your academic performance"
+          },
+          Schedule: {
+            title: "Schedule",
+            description: "View your class timetable"
+          },
+          PerformanceAnalytics: {
+            title: "Performance Analytics",
+            description: "Track your academic progress"
+          },
+          AIWritingAssistant: {
+            title: "AI Writing Assistant",
+            description: "Enhance your academic writing"
+          },
+          StudyPlanner: {
+            title: "Study Planner",
+            description: "Organize your study schedule"
+          },
+          Flashcards: {
+            title: "Flashcards",
+            description: "Create and study flashcards"
+          },
+          StudyGroups: {
+            title: "Study Groups",
+            description: "Collaborate with peers"
+          },
+          ProjectWorkspace: {
+            title: "Project Workspace",
+            description: "Manage group projects"
+          },
+          Discussions: {
+            title: "Class Discussions",
+            description: "Participate in course discussions"
+          },
+          HelpDesk: {
+            title: "Help Desk",
+            description: "Get support and answers"
+          },
+          Library: {
+            title: "Library Resources",
+            description: "Access library materials"
+          }
+        };
+        
+        const currentViewTitle = computed(() => views[currentView.value]?.title || 'Dashboard');
+        const currentViewDescription = computed(() => views[currentView.value]?.description || 'Your personalized academic overview');
+        
+        function showDashboard() {
+          currentView.value = 'DashboardView';
+        }
+        
+        function showFeature(feature) {
+          currentView.value = feature;
+        }
+        
+        function toggleChatbot() {
+          showChatbot.value = !showChatbot.value;
+        }
+        
+        function sendMessage() {
+          if (!userMessage.value.trim()) return;
+          
+          // Add user message
+          chatMessages.value.push({
+            sender: 'user',
+            text: userMessage.value
+          });
+          
+          const userMsg = userMessage.value.toLowerCase();
+          let botResponse = "I'm here to help with your academic questions. Would you like me to direct you to the relevant section?";
+          
+          if (userMsg.includes('assignment') || userMsg.includes('due')) {
+            botResponse = "Your next assignment for Software Engineering is due tomorrow at 11:59 PM. You can view all assignments in the <strong>Assignment Hub</strong>.";
+          } else if (userMsg.includes('course') || userMsg.includes('material')) {
+            botResponse = "All course materials are available in the <strong>Course Materials</strong> section, organized by subject.";
+          } else if (userMsg.includes('help') || userMsg.includes('support')) {
+            botResponse = "For technical support, please visit the <strong>Help Desk</strong> section or contact support@cast.edu.";
+          } else if (userMsg.includes('gpa') || userMsg.includes('grade')) {
+            botResponse = "Your current GPA is 3.8. You can view detailed performance analytics in the <strong>Performance Analytics</strong> section.";
+          }
+          
+          // Simulate typing delay
+          setTimeout(() => {
+            chatMessages.value.push({
+              sender: 'bot',
+              text: botResponse
+            });
+          }, 800);
+          
+          userMessage.value = '';
+        }
+        
+        function selectQuickQuestion(question) {
+          userMessage.value = question;
+          sendMessage();
+        }
+        
+        return {
+          currentView,
+          currentViewTitle,
+          currentViewDescription,
+          showDashboard,
+          showFeature,
+          showChatbot,
+          toggleChatbot,
+          userMessage,
+          chatMessages,
+          quickQuestions,
+          sendMessage,
+          selectQuickQuestion
+        };
+      },
+      components: {
+        DashboardView,
+        // Register all other components here
+        // AIWritingAssistant,
+        // StudyPlanner,
+        // etc.
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

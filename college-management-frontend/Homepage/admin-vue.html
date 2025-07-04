@@ -1,0 +1,131 @@
+                    Optimize Distribution
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+    };
+
+    // Vue Router setup
+    const routes = [
+      { path: '/', component: Dashboard, name: 'Dashboard' },
+      { path: '/students', component: StudentManagement, name: 'StudentManagement' },
+      { path: '/faculty', component: FacultyManagement, name: 'FacultyManagement' },
+      { path: '/workload', component: WorkloadDistribution, name: 'WorkloadDistribution' }
+      // Add more routes for other sections as needed
+    ];
+
+    const router = VueRouter.createRouter({
+      history: VueRouter.createWebHashHistory(),
+      routes,
+    });
+
+    // Main Admin Dashboard Layout
+    const AdminDashboard = {
+      template: `
+        <div class="flex h-screen overflow-hidden">
+          <!-- Sidebar -->
+          <aside class="w-64 bg-blue-900 text-white shadow-lg flex flex-col">
+            <div class="p-6 border-b border-blue-800">
+              <h1 class="text-2xl font-bold">C.A.S.T</h1>
+              <p class="text-blue-200 text-sm">College Automation System Tool</p>
+            </div>
+            <nav class="p-4 flex-1 overflow-y-auto">
+              <div class="mb-6">
+                <h3 class="text-xs uppercase tracking-wider text-blue-400 mb-3">Core Modules</h3>
+                <ul class="space-y-1">
+                  <li>
+                    <router-link to="/" class="flex items-center p-3 rounded-lg sidebar-item" exact>
+                      <i class="fas fa-tachometer-alt mr-3"></i>
+                      <span>Dashboard</span>
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link to="/students" class="flex items-center p-3 rounded-lg sidebar-item">
+                      <i class="fas fa-users mr-3"></i>
+                      <span>Student Management</span>
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link to="/faculty" class="flex items-center p-3 rounded-lg sidebar-item">
+                      <i class="fas fa-chalkboard-teacher mr-3"></i>
+                      <span>Faculty Management</span>
+                    </router-link>
+                  </li>
+                </ul>
+              </div>
+              <div class="mb-6">
+                <h3 class="text-xs uppercase tracking-wider text-blue-400 mb-3">📊 Academic Planning</h3>
+                <ul class="space-y-1">
+                  <li>
+                    <router-link to="/workload" class="flex items-center p-3 rounded-lg sidebar-item">
+                      <i class="fas fa-tasks mr-3"></i>
+                      <span>Workload Distribution</span>
+                    </router-link>
+                  </li>
+                  <!-- Add more academic planning links here if needed -->
+                </ul>
+              </div>
+              <!-- Add more sidebar sections if needed -->
+            </nav>
+            <div class="p-4 border-t border-blue-800">
+              <div class="flex items-center">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="h-8 w-8 rounded-full">
+                <div class="ml-3">
+                  <p class="text-sm font-medium">Admin User</p>
+                  <p class="text-xs text-blue-300">Super Administrator</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+          <!-- Main Content -->
+          <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm">
+              <div class="flex items-center justify-between p-4">
+                <div>
+                  <h2 class="text-xl font-semibold text-gray-800">Enhanced Admin Dashboard</h2>
+                  <p class="text-sm text-gray-500">Comprehensive college management system</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <div class="relative">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" placeholder="Search across all modules..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64">
+                  </div>
+                  <div class="flex items-center space-x-4">
+                    <div class="relative">
+                      <i class="fas fa-bell text-gray-600 hover:text-blue-600 cursor-pointer text-xl"></i>
+                      <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">7</span>
+                    </div>
+                    <div class="relative">
+                      <i class="fas fa-envelope text-gray-600 hover:text-blue-600 cursor-pointer text-xl"></i>
+                      <span class="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </div>
+                    <div class="relative group">
+                      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="h-8 w-8 rounded-full cursor-pointer">
+                      <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log out</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </header>
+            <!-- Routed Content -->
+            <router-view></router-view>
+          </div>
+        </div>
+      `
+    };
+
+    const app = Vue.createApp({});
+    app.component('admin-dashboard', AdminDashboard);
+    app.use(router);
+    app.mount('#app');
+  </script>
+</body>
+</html> 
