@@ -65,6 +65,7 @@ Install Dependencies
 Backend: pip install -r requirements.txt
 
 Frontend: npm install
+          npm run dev
 
 Start the Application
 
